@@ -27,28 +27,9 @@ git commit -m "Initial commit"
 ## Generate certificates
 
 ```bash
-#!/bin/bash
-
-# Certificate config
-cat > ./certs/openssl-subj.cnf <<EOF
-[ req ]
-distinguished_name = req_distinguished_name
-
-[ req_distinguished_name ]
-C = US                      # Country Name
-ST = California             # State or Province Name
-L = San Francisco           # Locality Name (City)
-O = MyOrganization          # Organization Name
-OU = MyDepartment           # Organizational Unit Name
-CN = localhost              # Common Name (e.g., domain name)
-EOF
-```
-
-
-```bash
 openssl genrsa -out ./certs/server.key 2048
-openssl req -new -key ./certs/server.key -out ./certs/server.csr -config ./certs/openssl-subj.cnf
-openssl x509 -req -in ./certs/server.csr -signkey ./certs/server.key -out ./certs/server.cert -days 365
+openssl req -new -key ./certs/server.key -out ./certs/server.csr -subj "/CN=localhost"
+openssl req -text -noout -verify -in ./certs/server.csr
 ```
 
 ## app.js >heredoc!
