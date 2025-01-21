@@ -47,7 +47,7 @@ EOF
 
 ```bash
 openssl genrsa -out ./certs/server.key 2048
-openssl req -new -key ./certs/server.key -out ./certs/server.csr -config openssl-subj.cnf
+openssl req -new -key ./certs/server.key -out ./certs/server.csr -config ./certs/openssl-subj.cnf
 openssl x509 -req -in ./certs/server.csr -signkey ./certs/server.key -out ./certs/server.cert -days 365
 ```
 
