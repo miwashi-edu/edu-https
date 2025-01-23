@@ -1,0 +1,24 @@
+{
+  "name": "https-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "concurrently \"npm run server1\" \"npm run server2\"",
+    "server1": "node ./src/service.js",
+    "server2": "node ./src/secure_service.js",
+    "server1:watch": "node --watch ./src/service.js",
+    "server2:watch": "node --watch ./src/secure_service.js",
+    "dev": "concurrently \"npm run server1:watch\" \"npm run server2:watch\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
