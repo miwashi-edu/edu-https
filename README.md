@@ -3,33 +3,55 @@
 ## Instructions
 
 ```bash
-cd ~
-cd ws
+cd ~/ws
 rm -rf https-test #Om den finns
-mkdir https-test && cd https-test
+mkdir https-test
+cd https-test
 npm init -y
 mkdir src
-mkdir certs
 touch ./src/app.js
 touch ./src/service.js
-touch ./src/secure_service.js
-npm pkg set scripts.start="node ./src/app.js"
-npm pkg set scripts.dev="node --watch ./src/app.js"
+npm pkg set scripts.start="concurrently \"npm run server1\" \"npm run server2\""
+npm pkg set scripts.server1="node ./src/service.js"
+npm pkg set scripts.server2="node ./src/secure_service.js"
+npm pkg set scripts.server1:watch="node --watch ./src/service.js"
+npm pkg set scripts.server2:watch="node --watch ./src/secure_service.js"
+npm pkg set scripts.dev="concurrently \"npm run server1:watch\" \"npm run server2:watch\""
 npm pkg set scripts.test="jest"
 npm install express
-npm install -D concurrently
+npm install --save-dev concurrently
 echo "node_modules" > .gitignore
 git init
 git add .
 git commit -m "Initial commit"
 ```
 
-## Generate certificates
+## Create certificates
+
+> In Unix directory separator is /, in Windows \, this might cause problems.
+
+### Answer questions
 
 ```bash
-openssl genrsa -out ./certs/server.key 2048
-openssl req -new -key ./certs/server.key -out ./certs/server.csr -subj "/CN=localhost"
-openssl req -text -noout -verify -in ./certs/server.csr
+mkdir ./certs
+# Unix
+openssl req -nodes -new -x509 -keyout ./certs/server.key -out ./certs/server.cert -days 365
+
+# Windows (not tested)
+openssl req -nodes -new -x509 -keyout .\certs\server.key -out .\certs\server.cert -days 365
+```
+# OR
+
+### No questions
+
+```bash
+mkdir ./certs
+openssl req \
+  -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout ./certs/server.key \
+  -out ./certs/server.cert \
+  -subj "/C=SE/ST=Stockholm/L=Stockholm/O=Jensen/OU=YH/CN=localhost/emailAddress=owner@example.com"
 ```
 
 ## app.js >heredoc!
